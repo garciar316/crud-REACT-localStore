@@ -1,40 +1,43 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { TodoContext } from '../TodoContext';
 import './TodoForm.css';
 
 function TodoForm() {
-  const [newTodoValue, setNewTodoValue] = React.useState('');
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const {
     addTodo,
     setOpenModal,
   } = React.useContext(TodoContext);
-  
-  const onChange = (event) => {
-    setNewTodoValue(event.target.value);
-  };
+
   const onCancel = () => {
     setOpenModal(false);
   };
-  const onSubmit = (event) => {
-    event.preventDefault();
-    addTodo(newTodoValue);
+  const onSubmit = (data) => {
+    addTodo(data.todo);
     setOpenModal(false);
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <label>Escribe tu nuevo TODO</label>
       <textarea
-        value={newTodoValue}
-        onChange={onChange}
-        placeholder="Cortar la cebolla oara el almuerzo"
+        placeholder="Cortar la cebolla para el almuerzo"
+        {...register('todo', {
+          required: {
+            value: true, message: 'Este campo es requerido'
+          }
+        })}
       />
+      <span className="text-danger">
+        {errors?.todo?.message}
+      </span>
       <div className="TodoForm-buttonContainer">
         <button
           type="button"
           className="TodoForm-button TodoForm-button--cancel"
           onClick={onCancel}
-          >
+        >
           Cancelar
         </button>
         <button

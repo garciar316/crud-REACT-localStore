@@ -69,3 +69,7 @@ textarea:focus {
 .TodoForm-button--cancel {
   background: transparent;
 }
+
+.text-danger {
+  color: red
+}
